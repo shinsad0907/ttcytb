@@ -1,4 +1,5 @@
 import requests
+from time import sleep
 
 class YTB:
     def __init__(self, cookie: str, authorization: str):
@@ -36,9 +37,9 @@ class YTB:
             'x-browser-copyright': 'Copyright 2025 Google LLC. All Rights reserved.',
             'x-browser-validation': 'UujAs0GAwdnCJ9nvrswZ+O+oco0=',
             'x-browser-year': '2025',
-            'x-client-data': 'CI22yQEIprbJAQipncoBCOfnygEIlKHLAQiFoM0BCJaMzwEIyZHPAQi1os8BCL2izwEI1KPPAQiSpM8BCJmlzwEIpqXPARjshc8BGLKGzwE=',
+            'x-client-data': 'CI22yQEIprbJAQipncoBCOfnygEIkqHLAQiFoM0BCJaMzwEIyZHPAQjUo88BCJKkzwEImaXPAQimpc8BGOyFzwEYsobPAQ==',
             # 'x-goog-authuser': '1',
-            'x-goog-visitor-id': 'CgtjeDhVYmY3S1Q4TSjByurKBjIKCgJWThIEGgAgIA%3D%3D',
+            # 'x-goog-visitor-id': 'CgtjeDhVYmY3S1Q4TSjByurKBjIKCgJWThIEGgAgIA%3D%3D',
             'x-origin': 'https://www.youtube.com',
             'x-youtube-bootstrap-logged-in': 'true',
             'x-youtube-client-name': '1',
@@ -46,14 +47,188 @@ class YTB:
             # 'cookie': 'VISITOR_INFO1_LIVE=cx8Ubf7KT8M; VISITOR_PRIVACY_METADATA=CgJWThIEGgAgIA%3D%3D; __Secure-ROLLOUT_TOKEN=CIPG-vjppfrrFBC3h8nR0c6OAxi7lOmp_u-RAw%3D%3D; YSC=h9IQ4D7ENrM; PREF=f6=40000000&tz=Etc.GMT-7&f5=20000&f4=10000; SID=g.a0005Qi7fZVpKG4km_uacFqWXYQrFkJuPQjerasb0h03E201aGXXclrU5XHOdglYRTr9QgoRLQACgYKAYUSARQSFQHGX2MiKGEIH-i-v9hVVvdI_w4xHxoVAUF8yKqyDSo8Ozltq9x1DMe6OLVl0076; __Secure-1PSID=g.a0005Qi7fZVpKG4km_uacFqWXYQrFkJuPQjerasb0h03E201aGXX5yZYJbZJYVZg7BE6-KCzWQACgYKAY4SARQSFQHGX2MiIS_6DeGoCHrmFbK9C5lrtBoVAUF8yKrQ5GspsH8xEuF1m3T5onDp0076; __Secure-3PSID=g.a0005Qi7fZVpKG4km_uacFqWXYQrFkJuPQjerasb0h03E201aGXXMX7ZHi16eRCLxZqYuzA-fwACgYKAYQSARQSFQHGX2Mir9jm3nk0W3UDQHZ6tTe3YhoVAUF8yKo5aw286aYRDPk8Dr6OehOX0076; HSID=A5ZWP_OXtm1tXt5Ra; SSID=AAdvwo5XLkRYvN2sq; APISID=IJz7TmK8UgtRgkEF/AznTi6P9b-JF452i6; SAPISID=0n9NojMQuwyzVQAX/AuhNAVIwY0dYK9iRz; __Secure-1PAPISID=0n9NojMQuwyzVQAX/AuhNAVIwY0dYK9iRz; __Secure-3PAPISID=0n9NojMQuwyzVQAX/AuhNAVIwY0dYK9iRz; __Secure-1PSIDTS=sidts-CjQBflaCdRvTnDHSN7tANscsgu-6OgRbm9T2KrwmQAD1s5aQR_lSy1wluSWOxt4nqPRMx_VXEAA; __Secure-3PSIDTS=sidts-CjQBflaCdRvTnDHSN7tANscsgu-6OgRbm9T2KrwmQAD1s5aQR_lSy1wluSWOxt4nqPRMx_VXEAA; CONSISTENCY=APeVyi-gntr9YHcYRsCd6p7ZSmbT1cvVYJ6CyyT01sEfKNxyo0nuVgBt5Qop61Cp9KT639KmbRcdIVGK-eEQoIWfjnv06z7UNlInd4QQ5MegLzfgJojUsDIUmi-SB-mjQPour3bYr-Jut9xfpjl0nxZDAawDgPMpyCji4bjuLlZuuJEGrrHfa5iDvcqSNQ; LOGIN_INFO=AFmmF2swRgIhAIe5rkTUekhZAMKg563E_QdD8KHdhuM-C6isrIWMTCgoAiEAsVNNuVJss4EVrNYz-uJSEqublf3ibVMm3rNaMRAIjxI:QUQ3MjNmd3NLclMzYV9xTlZWcUJuV3h4MXduWmNTMGM0YUo3d0NBNTRQSHVXMUNiWS1KdU5JVHlLQmRkaS1STEd3N1lSMzJDUFd6ZHk4WVN4ZTk5M1JBZS1rSDY0NVg3Q1ZmNHpYZWV6X0ZNWUpNVVdaaFppUTVFNjM4aFJLZEdJSWY5Ny13c1JyYWdnRzBDNUZyYzlBRkV1eWtCQkE5XzZ3; ST-xuwub9=session_logininfo=AFmmF2swRgIhAIe5rkTUekhZAMKg563E_QdD8KHdhuM-C6isrIWMTCgoAiEAsVNNuVJss4EVrNYz-uJSEqublf3ibVMm3rNaMRAIjxI%3AQUQ3MjNmd3NLclMzYV9xTlZWcUJuV3h4MXduWmNTMGM0YUo3d0NBNTRQSHVXMUNiWS1KdU5JVHlLQmRkaS1STEd3N1lSMzJDUFd6ZHk4WVN4ZTk5M1JBZS1rSDY0NVg3Q1ZmNHpYZWV6X0ZNWUpNVVdaaFppUTVFNjM4aFJLZEdJSWY5Ny13c1JyYWdnRzBDNUZyYzlBRkV1eWtCQkE5XzZ3; SIDCC=AKEyXzUX_VbFZDmKRzeoI_1XRy33oRJhJN0djffmdGqinEkUopqz-gJB66uhueQiG_y28BeNT_w; __Secure-1PSIDCC=AKEyXzX2O-nY78GwG5jw4IEwVBI5Ibx9Osth1_uLy7R9o0oURRXRaBjESSU9vy3m3mwDGIzG9uQ; __Secure-3PSIDCC=AKEyXzUBalvNXBqsuihqCihEtF5zHff1va8j51wP8ps-sH-nH-vVXYQoUgitZcJHB8CPig1Crw; ST-4n4ru8=session_logininfo=AFmmF2swRgIhAIe5rkTUekhZAMKg563E_QdD8KHdhuM-C6isrIWMTCgoAiEAsVNNuVJss4EVrNYz-uJSEqublf3ibVMm3rNaMRAIjxI%3AQUQ3MjNmd3NLclMzYV9xTlZWcUJuV3h4MXduWmNTMGM0YUo3d0NBNTRQSHVXMUNiWS1KdU5JVHlLQmRkaS1STEd3N1lSMzJDUFd6ZHk4WVN4ZTk5M1JBZS1rSDY0NVg3Q1ZmNHpYZWV6X0ZNWUpNVVdaaFppUTVFNjM4aFJLZEdJSWY5Ny13c1JyYWdnRzBDNUZyYzlBRkV1eWtCQkE5XzZ3',
         }
 
-        self.base_url = "https://www.youtube.com/youtubei/v1/subscription/subscribe"
-
-    def getdata(self):
+    def getdata(self, url: str):
+        re = requests.get(url, cookies=self.cookies, headers=self.headers).text
+        try:
+            self.pageid = re.split('"DELEGATED_SESSION_ID":"')[1].split('"')[0]
+        except:
+            self.pageid = False
         
+        self.visitorid = re.split('"VISITOR_DATA":"')[1].split('"')[0]
+        # self.idytb = re.split('"https://www.youtube.com/@')[1].split('"')[0]
+        try:
+            self.chanelid = re.split('"channelId":"')[1].split('"')[0]
+        except:
+            self.chanelid = ''
+        return self.pageid, self.visitorid, self.chanelid
+
+
+    def follow(self, url: str):
+        headers = self.headers.copy()
+        pageid, visitorid, chanelid = self.getdata(url)
+        if not pageid:
+            headers['x-goog-visitor-id'] = visitorid
+        else:
+            headers['x-goog-visitor-id'] = visitorid
+            headers['x-goog-pageid'] = pageid
+
+        params = {
+            'prettyPrint': 'false',
+        }
+
+        json_data = {
+            'context': {
+                'client': {
+                    'hl': 'vi',
+                    'gl': 'VN',
+                    'remoteHost': '2405:4802:6f82:34c0:5540:fc20:2e7:14ad',
+                    'deviceMake': '',
+                    'deviceModel': '',
+                    'visitorData': 'CgtjeDhVYmY3S1Q4TSjOgPDKBjIKCgJWThIEGgAgIA%3D%3D',
+                    'userAgent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36,gzip(gfe)',
+                    'clientName': 'WEB',
+                    'clientVersion': '2.20260105.01.00',
+                    'osName': 'Windows',
+                    'osVersion': '10.0',
+                    'originalUrl': 'https://www.youtube.com/',
+                    'platform': 'DESKTOP',
+                    'clientFormFactor': 'UNKNOWN_FORM_FACTOR',
+                    'windowWidthPoints': 615,
+                    'configInfo': {
+                        'appInstallData': 'CM6A8MoGEJTyzxwQ8rPQHBDhwYATEOaH0BwQxcbPHBC52c4cEL22rgUQ9quwBRDM688cELyk0BwQ0-GvBRDJ968FEOWk0BwQt4bPHBDDkdAcEIeszhwQo4W4IhDL0bEFEJX3zxwQvL_QHBCmmrAFEIiHsAUQ4tSuBRDgzbEFEN68zhwQxPTPHBDa984cEIKPzxwQjbDQHBCi-88cEJy40BwQnNfPHBCM6c8cEPG00BwQi_fPHBCRjP8SELCGzxwQ_LLOHBC36v4SEPHE0BwQ167QHBCHg9AcEKifqRcQvoqwBRC45M4cENvB0BwQ8p3QHBCPudAcEJq50BwQmY2xBRDartAcEMGP0BwQ5uDPHBDKu9AcEJSD0BwQlP6wBRCUttAcEKa20BwQntCwBRCBzc4cENq00BwQibDOHBCsrNAcELOQzxwQu9nOHBDSvdAcEMa9gBMQvZmwBRCW288cEMj3zxwQm8LQHBC8s4ATEK7WzxwQq53PHBDHttAcEM3RsQUQzN-uBRCDntAcELnA0BwQieiuBRC0wdAcEMWM0BwQy7HQHBDgv9AcEMfDgBMQvsHQHBDJutAcKnRDQU1TVWhWSi1acS1ETWVVRW9jT3FnTE1CYmtHX3NQbUNfQ3hFb2RNTXFDc0JBUEx2Z1g2T2ZtQ0JxQUdvaTZhSWZGUHpnX3RYUFV2OWctRkZPSWo3cDBGNHhiRktsUzNMX1FQX1F5ZUN2ZzVnaWdHSFFjPTAA',
+                        'coldConfigData': 'CM6A8MoGEO66rQUQxYWuBRC9tq4FEOLUrgUQvoqwBRCNzLAFEJ7QsAUQz9KwBRDj-LAFEK-nzhwQ_LLOHBCA_M4cELCGzxwQrpTPHBCrnc8cELTGzxwQxcbPHBD4xs8cENvTzxwQnNfPHBCf188cEMjazxwQz-DPHBDl588cEOfnzxwQlIPQHBDFjNAcEP6T0BwQzqzQHBDxtNAcEKC10BwQz7XQHBDsuNAcEJq50BwQybrQHBCVu9AcEOC_0BwQucDQHBC-wdAcENvB0BwQscPQHBCbxdAcEKfF0BwQo4W4IhoyQUNEU1IyVFE4dUR1d0lqWTNUSVZEVnc0emJaWDlRbGN2OTV5N0RNaGFsTzFMMVdwUmciMkFDRFNSMlNqUm5sSktFa05IVXNISXRvMDlGQjFYd0pnMHVaUUtPdXJ5bjVFZTNYbnN3KrQBQ0FNU2dBRU5OYmpkdHdLa0daY2ZuMC1aa3BvUTFBcXZBNDAyX2lPbkRjZ0FyQXhxTlBZWXFBTFpGN1lOQWktV0FPZ0Z6Z0lNbGdVTUZVMlpzYmNmaGFRRmtad0Y0ZHNCejhJQXIzellJXzNVQmpMUGdBWFpwQVlEb3JJRnlrc0dzRy1IQThZSjh3T0k1QVhMU2dTU3ZnYVpQZW94bFFWYmdnVGFXcEFpcDA5dnNSeXpCZz09',
+                        'coldHashData': 'CM6A8MoGEhMxODgxMDYwNDgxNDc3OTQ0ODQwGM6A8MoGMjJBQ0RTUjJUUTh1RHV3SWpZM1RJVkRWdzR6YlpYOVFsY3Y5NXk3RE1oYWxPMUwxV3BSZzoyQUNEU1IyU2pSbmxKS0VrTkhVc0hJdG8wOUZCMVh3SmcwdVpRS091cnluNUVlM1huc3dCtAFDQU1TZ0FFTk5iamR0d0trR1pjZm4wLVprcG9RMUFxdkE0MDJfaU9uRGNnQXJBeHFOUFlZcUFMWkY3WU5BaS1XQU9nRnpnSU1sZ1VNRlUyWnNiY2ZoYVFGa1p3RjRkc0J6OElBcjN6WUlfM1VCakxQZ0FYWnBBWURvcklGeWtzR3NHLUhBOFlKOHdPSTVBWExTZ1NTdmdhWlBlb3hsUVZiZ2dUYVdwQWlwMDl2c1J5ekJnPT0%3D',
+                        'hotHashData': 'CM6A8MoGEhMyOTA1NDU5ODM0MzYyODkxMzg1GM6A8MoGKJTk_BIopdD9Eiiekf4SKMjK_hIot-r-EiiRjP8SKMuRgBMotZuAEyi0sIATKNiwgBMok7SAEyiwt4ATKKW4gBMoucGAEyiywoATKMfDgBMoqJ-pFzIyQUNEU1IyVFE4dUR1d0lqWTNUSVZEVnc0emJaWDlRbGN2OTV5N0RNaGFsTzFMMVdwUmc6MkFDRFNSMlNqUm5sSktFa05IVXNISXRvMDlGQjFYd0pnMHVaUUtPdXJ5bjVFZTNYbnN3QjRDQU1TSXcwSm90ZjZGYTdCQnV1YkJ0VU1uQU1WRnQzUHdnemk5Z19jcWVZTGw5Y2ttOG9H',
+                    },
+                    'screenDensityFloat': 1,
+                    'userInterfaceTheme': 'USER_INTERFACE_THEME_DARK',
+                    'timeZone': 'Etc/GMT-7',
+                    'browserName': 'Chrome',
+                    'browserVersion': '143.0.0.0',
+                    'memoryTotalKbytes': '8000000',
+                    'acceptHeader': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                    'deviceExperimentId': 'ChxOelU1TVRrME16UXdOek16TmpFd01USXdOdz09EM6A8MoGGM6A8MoG',
+                    'rolloutToken': 'CIPG-vjppfrrFBC3h8nR0c6OAxiwsri5xPSRAw%3D%3D',
+                    'screenWidthPoints': 397,
+                    'screenHeightPoints': 952,
+                    'screenPixelDensity': 1,
+                    'utcOffsetMinutes': 420,
+                    'connectionType': 'CONN_CELLULAR_4G',
+                    'mainAppWebInfo': {
+                        'graftUrl': 'https://www.youtube.com/@amnhacchualanh.',
+                        'pwaInstallabilityStatus': 'PWA_INSTALLABILITY_STATUS_CAN_BE_INSTALLED',
+                        'webDisplayMode': 'WEB_DISPLAY_MODE_BROWSER',
+                        'isWebNativeShareAvailable': True,
+                    },
+                },
+                'user': {
+                    'lockedSafetyMode': False,
+                },
+                'request': {
+                    'useSsl': True,
+                    'internalExperimentFlags': [],
+                    'consistencyTokenJars': [],
+                },
+                'clientScreenNonce': 'wkjLpRlUEBiyQF_T',
+                'clickTracking': {
+                    'clickTrackingParams': 'CCMQmysYASITCNTznaKB9ZEDFe1BDwIdlxImgSjyODIJY2hhbm5lbHM0ygEEcskFsQ==',
+                },
+                'adSignalsInfo': {
+                    'params': [
+                        {
+                            'key': 'dt',
+                            'value': '1767637071559',
+                        },
+                        {
+                            'key': 'flash',
+                            'value': '0',
+                        },
+                        {
+                            'key': 'frm',
+                            'value': '0',
+                        },
+                        {
+                            'key': 'u_tz',
+                            'value': '420',
+                        },
+                        {
+                            'key': 'u_his',
+                            'value': '4',
+                        },
+                        {
+                            'key': 'u_h',
+                            'value': '1080',
+                        },
+                        {
+                            'key': 'u_w',
+                            'value': '1920',
+                        },
+                        {
+                            'key': 'u_ah',
+                            'value': '1040',
+                        },
+                        {
+                            'key': 'u_aw',
+                            'value': '1920',
+                        },
+                        {
+                            'key': 'u_cd',
+                            'value': '24',
+                        },
+                        {
+                            'key': 'bc',
+                            'value': '31',
+                        },
+                        {
+                            'key': 'bih',
+                            'value': '952',
+                        },
+                        {
+                            'key': 'biw',
+                            'value': '382',
+                        },
+                        {
+                            'key': 'brdim',
+                            'value': '931,0,931,0,1920,0,996,1047,397,952',
+                        },
+                        {
+                            'key': 'vis',
+                            'value': '1',
+                        },
+                        {
+                            'key': 'wgl',
+                            'value': 'true',
+                        },
+                        {
+                            'key': 'ca_type',
+                            'value': 'image',
+                        },
+                    ],
+                    'bid': 'ANyPxKotoTKZSSvB3Jj_2rog8gqJ3T4F6X-Z2mZnJ8tDux9RlB-jLEOaKThedT5tUf_ro7qcMWqRecQv6U2hPQZYLdfwSJP_yw',
+                },
+            },
+            'channelIds': [
+                chanelid,
+            ],
+            'params': 'EgIIAhgA',
+        }
+
+        response = requests.post(
+            'https://www.youtube.com/youtubei/v1/subscription/subscribe',
+            params=params,
+            cookies=self.cookies,
+            headers=headers,
+            json=json_data,
+        ).json()
+        # print(response)
+            
+
 
 class TTC:
     def __init__(self, api_key = "bc2a075708b3eec4929da5f613c5dfdf"):
         self.api_key = api_key
+        self.index_getcoin = 0
+        self.idpost = ''
         self.base_url = "https://tuongtaccheo.com/logintoken.php"
         self.cookies = {
             '_fbp': 'fb.1.1761508765559.516195470818743635',
@@ -80,6 +255,9 @@ class TTC:
             # 'cookie': '_fbp=fb.1.1761508765559.516195470818743635; PHPSESSID=cjp45dr87nu8gqv9a96hcl7sk3; _gid=GA1.2.242056569.1767635360; _gat_gtag_UA_88794877_6=1; _ga=GA1.2.1652707960.1761508764; _ga_6RNPVXD039=GS2.1.s1767635359$o85$g1$t1767635524$j51$l0$h0',
         }
 
+    def datnick(self):
+        pass
+
     def get_cookie(self):
         re = requests.post(self.base_url, headers=self.headers, data={'access_token': self.api_key})
         return re.cookies.get_dict()['PHPSESSID']
@@ -90,6 +268,32 @@ class TTC:
         response = requests.get('https://tuongtaccheo.com/youtube/kiemtien/subcheo/getpost.php', cookies=cookies, headers=self.headers)
         return response.json()
     
+    def getcoin(self,idpost):
+        cookies = self.cookies.copy()
+        cookies['PHPSESSID'] = self.get_cookie()
+        data = {
+            'id': idpost,
+        }
+        response = requests.get('https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php', cookies=cookies, headers=self.headers, data=data).json()
+        self.idpost = ''
+        self.index_getcoin = 0
+        return response
+    
+    def main(self, cookie, authorization):
+        post = self.getpost()
+        for item in post: 
+            print(f"Follow YTB: {item['link']}")
+            YTB(cookie, authorization).follow(item['link'])
+            sleep(5)
+            self.idpost += str(item['idpost']) + ','
+            self.index_getcoin += 1
+            if self.index_getcoin == 4:
+                getcoin = self.getcoin(self.idpost)
+                print('Nhận coin:', getcoin)
+    
 if __name__ == "__main__":
+    cookie = input("Nhap cookie YTB: ")
+    authorization = input("Nhap authorization YTB: ")
+    print('-------------------------------------------------')
     ttc = TTC()
-    print(ttc.getpost())
+    print(ttc.main(cookie, authorization))
