@@ -1,5 +1,15 @@
 import requests
 from time import sleep
+import random
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import random
+from time import sleep
+import time
+import re
 
 class YTB:
     def __init__(self, cookie: str, authorization: str):
@@ -38,8 +48,9 @@ class YTB:
             'x-browser-validation': 'UujAs0GAwdnCJ9nvrswZ+O+oco0=',
             'x-browser-year': '2025',
             'x-client-data': 'CI22yQEIprbJAQipncoBCOfnygEIkqHLAQiFoM0BCJaMzwEIyZHPAQjUo88BCJKkzwEImaXPAQimpc8BGOyFzwEYsobPAQ==',
-            # 'x-goog-authuser': '1',
+            'x-goog-authuser': '0',
             # 'x-goog-visitor-id': 'CgtjeDhVYmY3S1Q4TSjByurKBjIKCgJWThIEGgAgIA%3D%3D',
+            'x-goog-pageid': '101132415648947005236',
             'x-origin': 'https://www.youtube.com',
             'x-youtube-bootstrap-logged-in': 'true',
             'x-youtube-client-name': '1',
@@ -49,6 +60,10 @@ class YTB:
 
     def getdata(self, url: str):
         re = requests.get(url, cookies=self.cookies, headers=self.headers).text
+        try:
+            self.authuser = re.split('"SESSION_INDEX":"')[1].split('"')[0]
+        except:
+            self.authuser = False
         try:
             self.pageid = re.split('"DELEGATED_SESSION_ID":"')[1].split('"')[0]
         except:
@@ -60,17 +75,23 @@ class YTB:
             self.chanelid = re.split('"channelId":"')[1].split('"')[0]
         except:
             self.chanelid = ''
-        return self.pageid, self.visitorid, self.chanelid
+        # print(self.pageid, self.visitorid, self.chanelid)
+        return self.pageid, self.visitorid, self.chanelid, self.authuser
 
 
     def follow(self, url: str):
         headers = self.headers.copy()
-        pageid, visitorid, chanelid = self.getdata(url)
+        pageid, visitorid, chanelid, authuser = self.getdata(url)
         if not pageid:
             headers['x-goog-visitor-id'] = visitorid
         else:
             headers['x-goog-visitor-id'] = visitorid
             headers['x-goog-pageid'] = pageid
+        
+        if not authuser:
+            pass
+        else:
+            headers['x-goog-authuser'] = authuser
 
         params = {
             'prettyPrint': 'false',
@@ -225,23 +246,17 @@ class YTB:
 
 
 class TTC:
-    def __init__(self, api_key = "bc2a075708b3eec4929da5f613c5dfdf"):
-        self.api_key = api_key
-        self.index_getcoin = 0
+    def __init__(self, api_key="bc2a075708b3eec4929da5f613c5dfdf"):
+        self.index_job = 0
+        self.index_button = 1
         self.idpost = ''
+        self.api_key = api_key
         self.base_url = "https://tuongtaccheo.com/logintoken.php"
-        self.cookies = {
-            '_fbp': 'fb.1.1761508765559.516195470818743635',
-            'PHPSESSID': 'cjp45dr87nu8gqv9a96hcl7sk3',
-            '_gid': 'GA1.2.242056569.1767635360',
-            '_gat_gtag_UA_88794877_6': '1',
-            '_ga': 'GA1.2.1652707960.1761508764',
-            '_ga_6RNPVXD039': 'GS2.1.s1767635359$o85$g1$t1767635524$j51$l0$h0',
-        }
-
         self.headers = {
-            'accept': 'application/json, text/javascript, */*; q=0.01',
+            'accept': '*/*',
             'accept-language': 'vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5',
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'origin': 'https://tuongtaccheo.com',
             'priority': 'u=1, i',
             'referer': 'https://tuongtaccheo.com/youtube/kiemtien/subcheo/',
             'sec-ch-ua': '"Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"',
@@ -252,44 +267,148 @@ class TTC:
             'sec-fetch-site': 'same-origin',
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36',
             'x-requested-with': 'XMLHttpRequest',
-            # 'cookie': '_fbp=fb.1.1761508765559.516195470818743635; PHPSESSID=cjp45dr87nu8gqv9a96hcl7sk3; _gid=GA1.2.242056569.1767635360; _gat_gtag_UA_88794877_6=1; _ga=GA1.2.1652707960.1761508764; _ga_6RNPVXD039=GS2.1.s1767635359$o85$g1$t1767635524$j51$l0$h0',
+            # 'cookie': '_fbp=fb.1.1761508765559.516195470818743635; _gid=GA1.2.242056569.1767635360; _gcl_au=1.1.387163357.1767677503; PHPSESSID=07qvlfrfl578le7cc2a8hlrml5; _ga=GA1.1.1652707960.1761508764; _ga_6RNPVXD039=GS2.1.s1767693400$o87$g1$t1767694388$j11$l0$h0',
+        }
+        # cookie gốc
+        self.cookies = {
+            '_fbp': 'fb.1.1761508765559.516195470818743635',
+            'PHPSESSID': 'dlr4jh5pvm9s4tkb9h39a7m4s0',
+            '_gid': 'GA1.2.242056569.1767635360',
+            '_gat_gtag_UA_88794877_6': '1',
+            '_ga': 'GA1.2.1652707960.1761508764',
+            '_ga_6RNPVXD039': 'GS2.1.s1767635359$o85$g1$t1767635524$j51$l0$h0',
         }
 
-    def datnick(self):
-        pass
+        self.driver = None
 
-    def get_cookie(self):
-        re = requests.post(self.base_url, headers=self.headers, data={'access_token': self.api_key})
-        return re.cookies.get_dict()['PHPSESSID']
-    
-    def getpost(self):
-        cookies = self.cookies.copy()
-        cookies['PHPSESSID'] = self.get_cookie()
-        response = requests.get('https://tuongtaccheo.com/youtube/kiemtien/subcheo/getpost.php', cookies=cookies, headers=self.headers)
-        return response.json()
-    
-    def getcoin(self,idpost):
-        cookies = self.cookies.copy()
-        cookies['PHPSESSID'] = self.get_cookie()
+    # ================== INIT SELENIUM + ADD FULL COOKIE ==================
+    def __init_driver__(self):
+        options = Options()
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--start-maximized")
+
+        self.driver = webdriver.Chrome(options=options)
+
+        # mở domain trước khi add cookie
+        self.driver.get("https://tuongtaccheo.com/")
+        time.sleep(2)
+
+    def wait_and_click(self, locator, locator_type="xpath", timeout=60, driver=None):
+        driver = driver or self.driver
+        if locator_type.lower() == "xpath":
+            by = By.XPATH
+        elif locator_type.lower() == "id":
+            by = By.ID 
+        elif locator_type.lower() == "name":
+            by = By.NAME
+        else:
+            raise ValueError("Unsupported locator type")
+
+        element = WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable((by, locator))
+        )
+        element.click()
+        sleep(random.uniform(1, 2))  # 🔴 Random delay
+
+    def wait_and_send_keys(self, locator, keys, locator_type="xpath", timeout=60, driver=None):
+        driver = driver or self.driver
+
+        def human_typing(element, text, delay_range=(0.1, 0.3)):
+            for char in text:
+                element.send_keys(char)
+                sleep(random.uniform(*delay_range))
+
+        if locator_type.lower() == "xpath":
+            by = By.XPATH
+        elif locator_type.lower() == "id":
+            by = By.ID 
+        elif locator_type.lower() == "name":
+            by = By.NAME
+        else:
+            raise ValueError("Unsupported locator type")
+
+        element = WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable((by, locator))
+        )
+        element.clear()
+        human_typing(element, keys)
+        sleep(random.uniform(1, 2))  # 🔴 Random delay
+
+    def login_ttc(self):
+        self.wait_and_send_keys('/html/body/div[1]/div/div[4]/div/div[2]/form/input[1]', 'Shinsad1')
+        self.wait_and_send_keys('/html/body/div[1]/div/div[4]/div/div[2]/form/input[2]', 'shinsad0907')
+        self.wait_and_click('/html/body/div[1]/div/div[4]/div/div[2]/form/input[4]')
+
+    # ================== GETPOST BẰNG SELENIUM ==================
+
+    def getcoin(self, idpost):
         data = {
             'id': idpost,
         }
-        response = requests.get('https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php', cookies=cookies, headers=self.headers, data=data).json()
-        self.idpost = ''
-        self.index_getcoin = 0
+
+        response = requests.post(
+            'https://tuongtaccheo.com/youtube/kiemtien/subcheo/nhantien.php',
+            cookies=self.cookies,
+            headers=self.headers,
+            data=data,
+        ).json()
         return response
-    
-    def main(self, cookie, authorization):
-        post = self.getpost()
-        for item in post: 
-            print(f"Follow YTB: {item['link']}")
-            YTB(cookie, authorization).follow(item['link'])
-            sleep(5)
-            self.idpost += str(item['idpost']) + ','
-            self.index_getcoin += 1
-            if self.index_getcoin == 4:
-                getcoin = self.getcoin(self.idpost)
-                print('Nhận coin:', getcoin)
+        # print(response.json())
+    def selenium_getpost(self,cookie, authorization):
+        wait = WebDriverWait(self.driver, 15)
+        main_tab = self.driver.current_window_handle
+        old_tabs = self.driver.window_handles
+        self.driver.get(f"https://tuongtaccheo.com/youtube/kiemtien/subcheo/")
+        input("Đăng nhập TTC xong nhấn Enter để tiếp tục...")
+        try:
+            while True:
+                button = self.driver.find_element(By.XPATH, f'/html/body/div/div/div[3]/div/div/div/div[{self.index_button}]/div/div/button')
+                # button = self.driver.find_element(By.XPATH, '/html/body/div/div/div[3]/div/div/div/div[2]/div/div/button')
+                onclick_value = button.get_attribute('onclick')
+                print(onclick_value)
+                match = re.search(r"like\('([^']+)','([^']+)'\)", onclick_value)
+                job_id = match.group(1)
+                youtube_url = match.group(2)
+                # đợi tab mới mở
+                self.wait_and_click(f'/html/body/div/div/div[3]/div/div/div/div[{self.index_button}]/div/div/button')
+
+                wait.until(lambda d: len(d.window_handles) > len(old_tabs))
+
+                # xác định tab mới
+                new_tab = [t for t in self.driver.window_handles if t not in old_tabs][0]
+
+                # chuyển qua tab youtube
+                self.driver.switch_to.window(new_tab)
+                time.sleep(2)
+
+                self.driver.close()
+                # quay lại tab TTC
+                self.driver.switch_to.window(main_tab)
+                time.sleep(3)
+                ytb = YTB(cookie, authorization)
+                ytb.follow(youtube_url)
+                sleep(10)
+                self.idpost += f'{job_id},'
+                self.index_job += 1
+                self.index_button += 1
+                if self.index_job == 4:
+                    idpost = self.idpost.rstrip(',')
+                    print(f'Gửi idpost: {idpost}')
+                    # input("Nhấn Enter để tiếp tục...")
+                    getcoin = self.getcoin(idpost)
+                    print(getcoin)
+                    self.index_job = 0
+                    # pass
+                # input("Nhấn Enter để tiếp tục...")
+        except Exception as e:
+            pass
+
+    # ================== MAIN ==================
+    def main(self,cookie, authorization):
+        self.__init_driver__()
+        self.login_ttc()
+        self.selenium_getpost(cookie, authorization)
+
     
 if __name__ == "__main__":
     cookie = input("Nhap cookie YTB: ")
